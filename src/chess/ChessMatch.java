@@ -15,6 +15,9 @@ public class ChessMatch {
     private Color currentPlayer;
     private Board board;
 
+    //Start w false
+    private boolean check;
+
     private List<Piece> piecesOnTheBoard = new ArrayList<>();
     private List<Piece> capturedPieces = new ArrayList<>();
 
@@ -73,6 +76,17 @@ public class ChessMatch {
         return capturedPiece;
     }
 
+    private void undoMove(Position source, Position target, Piece capturePiece) {
+        Piece p = board.removePiece(target);
+        board.placePiece(p, source);
+
+        if(capturePiece != null) {
+            board.placePiece(capturePiece, target);
+            capturedPieces.remove(capturePiece);
+            piecesOnTheBoard.add(capturePiece);
+        }
+    }
+
     private void validateSourcePosition(Position position){
         if(!board.thereIsAPiece(position)){
             throw new ChessException("There is no piece on source position.");
@@ -101,6 +115,10 @@ public class ChessMatch {
     private void placeNewPiece(char column, int row, ChessPiece piece) {
         board.placePiece(piece, new ChessPosition(column, row).toPosition());
         piecesOnTheBoard.add(piece);
+    }
+
+    private Color opponent(Color color) {
+        return (color == Color.WHITE) ? Color.BLACK : Color.WHITE;
     }
 
     //Star game, placed the pieces on the board
