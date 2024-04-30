@@ -131,6 +131,21 @@ public class ChessMatch {
         return (color == Color.WHITE) ? Color.BLACK : Color.WHITE;
     }
 
+    private boolean testCheck(Color color) {
+        //King position on matrix
+        Position kingPosition = king(color).getChessPosition().toPosition();
+        List<Piece> opponentPieces = piecesOnTheBoard.stream()
+                .filter(x -> ((ChessPiece)x).getColor() == opponent((color))).toList();
+
+        for (Piece p : opponentPieces) {
+            boolean[][] mat = p.possibleMovies();
+            if (mat[kingPosition.getRow()][kingPosition.getColumn()]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //Star game, placed the pieces on the board
     private void initialSetup(){
         placeNewPiece('c', 1, new Rook(board, Color.WHITE));
