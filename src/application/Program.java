@@ -42,6 +42,13 @@ public class Program {
 
                 System.out.println();
 
+                //Opportunity to choose a new piece
+                if (chessMatch.getPiecePromoted() != null) {
+                    System.out.print("Enter your option for promotion (B/H/R/Q): ");
+                    String type = sc.nextLine();
+                    chessMatch.replacePromotedPiece(type);
+                }
+
             } catch (ChessException | InputMismatchException e) {
                 System.out.println(e.getMessage());
                 sc.nextLine();
