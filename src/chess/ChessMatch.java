@@ -128,18 +128,33 @@ public class ChessMatch {
             rook.increaseMoveCount();
         }
 
+        //EnPassant logic dependence - position of captured pawn
+        if (p instanceof Pawn) {
+            if (source.getColumn() != target.getColumn() && capturedPiece == null) {
+                Position pawnPosition;
+                if (p.getColor() == Color.WHITE) {
+                    pawnPosition = new Position(target.getRow() + 1, target.getColumn());
+                } else {
+                    pawnPosition = new Position(target.getRow() - 1, target.getColumn());
+                }
+                capturedPiece = board.removePiece(pawnPosition);
+                capturedPieces.add(capturedPiece);
+                piecesOnTheBoard.remove(capturedPiece);
+            }
+        }
+
         return capturedPiece;
     }
 
-    private void undoMove(Position source, Position target, Piece capturePiece) {
+    private void undoMove(Position source, Position target, Piece capturedPiece) {
         ChessPiece p = (ChessPiece)board.removePiece(target);
         p.decreaseMoveCount();
         board.placePiece(p, source);
 
-        if(capturePiece != null) {
-            board.placePiece(capturePiece, target);
-            capturedPieces.remove(capturePiece);
-            piecesOnTheBoard.add(capturePiece);
+        if(capturedPiece != null) {
+            board.placePiece(capturedPiece, target);
+            capturedPieces.remove(capturedPiece);
+            piecesOnTheBoard.add(capturedPiece);
         }
 
         //Undo castling king-side rook
@@ -158,6 +173,24 @@ public class ChessMatch {
             ChessPiece rook = (ChessPiece)board.removePiece(rookDestination);
             board.placePiece(rook, sourceRook);
             rook.decreaseMoveCount();
+        }
+
+        //EnPassant UNdo logic dependence - position of captured pawn
+        if (p instanceof Pawn) {
+            if (source.getColumn() != target.getColumn() && capturedPiece == enPassantVulnerable) {
+
+                ChessPiece UnPawn = (ChessPiece)board.removePiece(target);
+
+                Position pawnPosition;
+
+                if (p.getColor() == Color.WHITE) {
+                    pawnPosition = new Position(3, target.getColumn());
+                } else {
+                    pawnPosition = new Position(4, target.getColumn());
+                }
+
+                board.placePiece(UnPawn, pawnPosition);
+            }
         }
     }
 

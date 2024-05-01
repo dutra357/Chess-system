@@ -102,8 +102,6 @@ public class Pawn extends ChessPiece {
                     mat[atRight.getRow() + 1][atRight.getColumn()] = true;
                 }
             }
-
-
         }
         return mat;
     }
