@@ -4,6 +4,7 @@ import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -45,8 +46,15 @@ public class Program {
                 //Opportunity to choose a new piece
                 if (chessMatch.getPiecePromoted() != null) {
                     System.out.print("Enter your option for promotion (B/H/R/Q): ");
-                    String type = sc.nextLine();
-                    chessMatch.replacePromotedPiece(type);
+                    String typePiece = sc.nextLine().toUpperCase();
+
+                    while (!typePiece.equals("B") && !typePiece.equals("H") &&
+                            !typePiece.equals("R") && !typePiece.equals("Q")) {
+                        System.out.print("Invalid charcter. Type a valid option for promotion (B/H/R/Q): ");
+                        typePiece = sc.nextLine().toUpperCase();
+                    }
+
+                    chessMatch.replacePromotedPiece(typePiece);
                 }
 
             } catch (ChessException | InputMismatchException e) {

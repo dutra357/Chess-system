@@ -123,7 +123,7 @@ public class ChessMatch {
 
         if (!typePiece.equals("B") && !typePiece.equals("H") &&
         !typePiece.equals("R") && !typePiece.equals("Q")) {
-            throw new InvalidParameterException("Invalid type for promotion.");
+            return piecePromoted;
         }
 
         Position position = piecePromoted.getChessPosition().toPosition();
